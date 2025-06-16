@@ -41,7 +41,7 @@ export function LoginForm({
 
       const signUpResult = await signIn("credentials", {
         email: data.email,
-        password: data.passoword,
+        password: data.password,
         redirect: false,
       });
 
@@ -91,11 +91,11 @@ export function LoginForm({
                   id="password"
                   type="password"
                   required
-                  {...register("passoword")}
+                  {...register("password")}
                 />
-                {errors.passoword && (
+                {errors.password && (
                   <p className="text-center text-sm text-red-500">
-                    {errors.passoword.message}
+                    {errors.password.message}
                   </p>
                 )}
               </div>

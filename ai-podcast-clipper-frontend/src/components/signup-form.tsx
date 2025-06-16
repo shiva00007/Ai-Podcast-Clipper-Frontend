@@ -19,14 +19,10 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  //gobal error
-
   const [error, setError] = useState<string | null>(null);
-
-  const [isSubmiting, setIsSumbiting] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  //zod validation
+
   const {
     register,
     handleSubmit,
@@ -35,48 +31,48 @@ export function SignupForm({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSumbit = async (data: signupFormValues) => {
+  const onSubmit = async (data: signupFormValues) => {
     try {
-      setIsSumbiting(true);
+      setIsSubmitting(true);
       setError(null);
 
       const result = await signUp(data);
 
       if (!result.success) {
-        setError(result.error ?? "An Error Ocucer duirng Singup");
+        setError(result.error ?? "An error occurred during signup.");
+        return;
       }
 
       const signInResult = await signIn("credentials", {
         email: data.email,
-        password: data.passoword,
+        password: data.password,
         redirect: false,
       });
 
       if (signInResult?.error) {
         setError(
-          "Account created but couldn't singin Automatically Please Try agian",
+          "Account created, but couldn't sign in automatically. Please try again.",
         );
       } else {
         router.push("/dashboard");
       }
     } catch (error) {
-      setError("An unExpected Error Ocuccr");
+      setError("An unexpected error occurred.");
     } finally {
-      setIsSumbiting(false);
+      setIsSubmitting(false);
     }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">SignUp</CardTitle>
-          {/* <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription> */}
+          <CardTitle className="text-center">Sign Up</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSumbit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
+              {/* Email */}
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -92,33 +88,41 @@ export function SignupForm({
                   </p>
                 )}
               </div>
+
+              {/* Password */}
               <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   required
-                  {...register("passoword")}
+                  {...register("password")}
                 />
-                {errors.passoword && (
+                {errors.password && (
                   <p className="text-center text-sm text-red-500">
-                    {errors.passoword.message}
+                    {errors.password.message}
                   </p>
                 )}
               </div>
+
+              {/* Global error */}
               {error && (
-                <p className="rounded-md bg-red-50 text-xl text-red-500">
+                <p className="rounded-md bg-red-50 p-2 text-center text-sm text-red-600">
                   {error}
                 </p>
               )}
+
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={isSubmiting}>
-                  {isSubmiting ? "Signing up..." : "SignUp"}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Signing up..." : "Sign Up"}
                 </Button>
               </div>
             </div>
+
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
               <Link href="/login" className="underline underline-offset-4">
