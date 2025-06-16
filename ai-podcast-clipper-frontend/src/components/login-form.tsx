@@ -9,13 +9,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Link from "next/link";
-import { signupSchema, type signupFormValues } from "~/schemas/auth";
-import { signUp } from "~/actions/auth";
+import { signupSchema, type loginFormValues } from "~/schemas/auth";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export function SignupForm({
+export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -31,31 +30,23 @@ export function SignupForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<signupFormValues>({
+  } = useForm<loginFormValues>({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSumbit = async (data: signupFormValues) => {
+  const onSumbit = async (data: loginFormValues) => {
     try {
       setIsSumbiting(true);
       setError(null);
 
-      const result = await signUp(data);
-
-      if (!result.success) {
-        setError(result.error ?? "An Error Ocucer duirng Singup");
-      }
-
-      const signInResult = await signIn("credentials", {
+      const signUpResult = await signIn("credentials", {
         email: data.email,
         password: data.passoword,
         redirect: false,
       });
 
-      if (signInResult?.error) {
-        setError(
-          "Account created but couldn't singin Automatically Please Try agian",
-        );
+      if (signUpResult?.error) {
+        setError("Invalid Email and Password");
       } else {
         router.push("/dashboard");
       }
@@ -69,7 +60,7 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">SignUp</CardTitle>
+          <CardTitle className="text-center">Login</CardTitle>
           {/* <CardDescription>
             Enter your email below to login to your account
           </CardDescription> */}
@@ -120,9 +111,9 @@ export function SignupForm({
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/login" className="underline underline-offset-4">
-                Sign In
+              Don`&apos;`thave an account?{" "}
+              <Link href="/signup" className="underline underline-offset-4">
+                Sign Up
               </Link>
             </div>
           </form>
