@@ -19,7 +19,7 @@ export async function signUp(data: signupFormValues): Promise<signUpResult> {
       error: validationResult.error.issues[0]?.message || "Invalid Input",
     };
   }
-  const { email, passoword } = validationResult.data;
+  const { email, password } = validationResult.data;
 
   try {
     const exsistingUser = await db.user.findUnique({
@@ -33,7 +33,7 @@ export async function signUp(data: signupFormValues): Promise<signUpResult> {
       };
     }
 
-    const hashedPassword = await hashPassword(passoword);
+    const hashedPassword = await hashPassword(password);
 
     // const stripe = new Stripe("Todo:script Key added");
 
@@ -53,7 +53,7 @@ export async function signUp(data: signupFormValues): Promise<signUpResult> {
   } catch (error) {
     return {
       success: false,
-      error: "An Error Occur During Singup",
+      error: "An Error Occur During Signup",
     };
   }
 }
