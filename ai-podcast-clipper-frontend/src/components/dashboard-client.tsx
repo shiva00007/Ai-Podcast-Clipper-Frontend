@@ -1,7 +1,7 @@
 "use client";
 import type { Clip } from "@prisma/client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
@@ -17,6 +17,17 @@ import { generateUploadUrl } from "~/actions/s3";
 
 import { toast } from "sonner";
 import { processVideo } from "~/actions/generation";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+import { Badge } from "./ui/badge";
+import { useRouter } from "next/navigation";
 type uploadedFilesProps = {
   id: string;
   s3Key: string;
@@ -41,10 +52,37 @@ const DashboardClient = ({
 
   const [uploading, setUploading] = useState(false);
 
+  const [refreshing, setRefreshing] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
+
   const handleDrop = (acceptedFiles: File[]) => {
     setFiles(acceptedFiles);
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    router.refresh();
+
+    // Clear any previous timeout to avoid stacking
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Set timeout and save the ID
+    timeoutRef.current = setTimeout(() => {
+      setRefreshing(false);
+    }, 600);
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   const handleUpload = async () => {
     if (files.length === 0) return;
 
@@ -185,6 +223,79 @@ const DashboardClient = ({
                   )}
                 </Button>
               </div>
+              {uploadedFiles.length > 0 && (
+                <div className="pt-6">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="text-md mb-2 font-medium">Queue Status</h3>
+                    <Button
+                      onClick={handleRefresh}
+                      variant="outline"
+                      size="sm"
+                      disabled={refreshing}
+                    >
+                      {refreshing && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      Refresh
+                    </Button>
+                  </div>
+
+                  <div className="max-h-[300px] overflow-auto rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>File</TableHead>
+                          <TableHead>Uploaded</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Clips Created</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {uploadedFiles?.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell className="max-w-xs truncate font-medium">
+                              {item.fileName}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground text-sm">
+                              {
+                                new Date(item.createdAt)
+                                  .toISOString()
+                                  .split("T")[0]
+                              }
+                            </TableCell>
+                            <TableCell>
+                              {item.status === "queued" && (
+                                <Badge variant="outline">Queued</Badge>
+                              )}
+                              {item.status === "processing" && (
+                                <Badge variant="outline">Processing</Badge>
+                              )}
+                              {item.status === "proccesed" && (
+                                <Badge variant="outline">Processed</Badge>
+                              )}
+                              {item.status === "no credits" && (
+                                <Badge variant="destructive">No Credits</Badge>
+                              )}
+                              {item.status === "failed" && (
+                                <Badge variant="destructive">Falied</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {item.clipsCount > 0 ? (
+                                <span>{item.clipsCount}</span>
+                              ) : (
+                                <span className="text-muted-foreground">
+                                  No clips Yet
+                                </span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
