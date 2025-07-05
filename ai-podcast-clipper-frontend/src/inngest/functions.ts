@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { env } from "~/env";
 import { inngest } from "./client";
 import { db } from "~/server/db";
@@ -17,14 +14,19 @@ export const processVideo = inngest.createFunction(
   },
   { event: "process-video-events" },
   async ({ event, step }) => {
-    const { uploadedFileId } = event.data;
+    const { uploadedFileId } = event.data as {
+      uploadedFileId: string;
+      userId: string;
+    };
 
     try {
       const { userId, credits, s3Key } = await step.run(
-        "checkcredits",
+        "check-credits",
         async () => {
           const uploadedFile = await db.uploadedFile.findUniqueOrThrow({
-            where: { id: uploadedFileId },
+            where: {
+              id: uploadedFileId,
+            },
             select: {
               user: {
                 select: {
@@ -45,28 +47,31 @@ export const processVideo = inngest.createFunction(
       );
 
       if (credits > 0) {
-        await step.run("set-status-process", async () => {
+        await step.run("set-status-processing", async () => {
           await db.uploadedFile.update({
-            where: { id: uploadedFileId },
-            data: { status: "processing" },
+            where: {
+              id: uploadedFileId,
+            },
+            data: {
+              status: "processing",
+            },
           });
         });
 
-        await step.run("call-modal-endpoint", async () => {
-          await fetch(env.PROCESS_VIDEO_ENDPOINT, {
-            method: "POST",
-            body: JSON.stringify({ s3_key: s3Key }),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${env.PROCESS_VIDEO_SECRET}`,
-            },
-          });
+        await step.fetch(env.PROCESS_VIDEO_ENDPOINT, {
+          method: "POST",
+          body: JSON.stringify({ s3_key: s3Key }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${env.PROCESS_VIDEO_SECRET}`,
+          },
         });
 
         const { clipsFound } = await step.run(
           "create-clips-in-db",
           async () => {
             const folderPrefix = s3Key.split("/")[0]!;
+
             const allKeys = await listS3ObjectsByPrefix(folderPrefix);
 
             const clipKeys = allKeys.filter(
@@ -90,7 +95,9 @@ export const processVideo = inngest.createFunction(
 
         await step.run("deduct-credits", async () => {
           await db.user.update({
-            where: { id: userId },
+            where: {
+              id: userId,
+            },
             data: {
               credits: {
                 decrement: Math.min(credits, clipsFound),
@@ -101,22 +108,34 @@ export const processVideo = inngest.createFunction(
 
         await step.run("set-status-processed", async () => {
           await db.uploadedFile.update({
-            where: { id: uploadedFileId },
-            data: { status: "processed" },
+            where: {
+              id: uploadedFileId,
+            },
+            data: {
+              status: "processed",
+            },
           });
         });
       } else {
         await step.run("set-status-no-credits", async () => {
           await db.uploadedFile.update({
-            where: { id: uploadedFileId },
-            data: { status: "No Credits" },
+            where: {
+              id: uploadedFileId,
+            },
+            data: {
+              status: "no credits",
+            },
           });
         });
       }
     } catch (error: unknown) {
       await db.uploadedFile.update({
-        where: { id: uploadedFileId },
-        data: { status: "failed" },
+        where: {
+          id: uploadedFileId,
+        },
+        data: {
+          status: "failed",
+        },
       });
     }
   },

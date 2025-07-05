@@ -13,6 +13,10 @@ import {
 } from "./ui/card";
 import Dropzone, { type DropzoneState } from "shadcn-dropzone";
 import { Loader2, UploadCloud } from "lucide-react";
+import { generateUploadUrl } from "~/actions/s3";
+
+import { toast } from "sonner";
+import { processVideo } from "~/actions/generation";
 type uploadedFilesProps = {
   id: string;
   s3Key: string;
@@ -42,21 +46,58 @@ const DashboardClient = ({
   };
 
   const handleUpload = async () => {
-    if (files.length === 0) {
-      return;
-    }
+    if (files.length === 0) return;
 
     const file = files[0]!;
     setUploading(true);
 
     try {
-      //client -> s3 bucket
-      //cliet -> next js Backend -> s3 bucket
+      const { success, signedUrl, uploadedFileId } = await generateUploadUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+
+      console.log("Upload URL:", signedUrl);
+      console.log("Uploaded File ID:", uploadedFileId);
+
+      if (!success || !signedUrl) {
+        throw new Error("Failed to get Upload URL");
+      }
+
+      const uploadResponse = await fetch(signedUrl, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      console.log("Upload status:", uploadResponse.status);
+      if (!uploadResponse.ok) {
+        const err = await uploadResponse.text();
+        console.error("S3 Upload Error:", err);
+        throw new Error(`Upload failed with status ${uploadResponse.status}`);
+      }
+
+      await processVideo(uploadedFileId);
+
+      setFiles([]);
+      toast.success("Your video is Uploaded Successfully", {
+        description:
+          "Your video has been scheduled for processing. Check the status below.",
+        duration: 5000,
+      });
     } catch (error) {
+      console.error("Upload or Processing Error:", error);
+      toast.error("Upload failed", {
+        description:
+          "There was a problem uploading your video. Please try again.",
+      });
     } finally {
       setUploading(false);
     }
   };
+
   return (
     <div className="mx-auto flex max-w-5xl flex-col space-y-6 px-4 py-8">
       <div className="flex items-center justify-between">
