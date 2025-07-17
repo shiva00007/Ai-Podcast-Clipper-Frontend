@@ -20,7 +20,6 @@ import { processVideo } from "~/actions/generation";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -28,6 +27,7 @@ import {
 } from "./ui/table";
 import { Badge } from "./ui/badge";
 import { useRouter } from "next/navigation";
+import ClipsDisplay from "./clips-display";
 type uploadedFilesProps = {
   id: string;
   s3Key: string;
@@ -296,6 +296,20 @@ const DashboardClient = ({
                   </div>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="my-clips">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Clips</CardTitle>
+              <CardDescription>
+                View and Manage Your AI Generated Clips here.Processing May take
+                Few Minutes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ClipsDisplay clips={clips} />
             </CardContent>
           </Card>
         </TabsContent>
