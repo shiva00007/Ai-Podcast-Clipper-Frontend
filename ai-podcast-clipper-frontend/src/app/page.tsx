@@ -1,6 +1,12 @@
-import Link from "next/link";
 import HomeNavBar from "~/components/home-nav";
-
-export default function HomePage() {
-  return <HomeNavBar />;
+import HeroSection from "~/components/hero";
+export default async function HomePage() {
+  return (
+    <>
+      <HomeNavBar />
+      <main>
+        <HeroSection />
+      </main>
+    </>
+  );
 }
