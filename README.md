@@ -3,7 +3,8 @@
 
 
 ## 🤖 Introduction  
-AI Finance Platform is a **full-stack AI-powered finance management system** built with **Next.js, Tailwind CSS, Prisma, and ShadCN UI**. It provides a **CRM-based dashboard** for **budget tracking, transaction analytics, real-time alerts**, and **intelligent financial insights** powered by **Gemini AI**.  
+AIPodcast Clipper SaaS is a full-stack AI-powered platform that automatically detects the most engaging moments in podcasts & videos, and turns them into share-ready clips with subtitles.
+Built with Next.js, FastAPI, Prisma, and shadcn/ui, it uses WhisperX, Gemini AI, and asd for advanced speech-to-text, speaker separation, and audio segment detection. The entire pipeline is automated with Inngest for event processing and Modal for AI model deployment.  
 
 ## ⚙️ Tech Stack  
 - **Frontend:** Next.js, Tailwind CSS, ShadCN UI  
