@@ -33,3 +33,36 @@ export const plans: PricingPlan[] = [
     priceId: "large",
   },
 ];
+
+export const testimonials = [
+  {
+    quote:
+      "This tool has completely transformed how I handle content. What used to take me hours is now done in minutes — and the quality is top-notch.",
+    name: "Aarav Mehta",
+    title: "Content Creator & Digital Strategist",
+  },
+  {
+    quote:
+      "I used to dread editing videos, but now it’s the fastest part of my workflow. This platform lets me focus on creativity instead of technical headaches.",
+    name: "Emily Carter",
+    title: "YouTube Educator",
+  },
+  {
+    quote:
+      "The automation is a game-changer. I can publish more, experiment more, and see what works without spending a fortune on production.",
+    name: "Daniel Wong",
+    title: "Marketing Lead, GrowthWave",
+  },
+  {
+    quote:
+      "It’s rare to find a tool that’s both powerful and incredibly easy to use. My team adopted it instantly — no training required.",
+    name: "Sophia Rodriguez",
+    title: "Social Media Manager",
+  },
+  {
+    quote:
+      "I love how fast I can turn my ideas into polished videos. It feels like having a full production team in my pocket.",
+    name: "Liam Johnson",
+    title: "Freelance Videographer",
+  },
+];

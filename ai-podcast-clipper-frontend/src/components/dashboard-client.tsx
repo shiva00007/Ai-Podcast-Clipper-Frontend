@@ -169,21 +169,21 @@ const DashboardClient = ({
                 onDrop={handleDrop}
                 accept={{ "video/mp4": [".mp4"] }}
                 maxSize={500 * 1024 * 1024}
-                maxFiles={1}
                 disabled={uploading}
+                maxFiles={1}
               >
                 {(dropzone: DropzoneState) => (
                   <>
-                    <div className="flex flex-col items-center justify-center space-y-4 rounded-lg p-10 text-center">
-                      <UploadCloud className="text-muted-foreground h-12 w-12" />
-                      <p className="font-medium"> Drag and Drop Your File</p>
+                    <div className="flex flex-col items-center justify-center space-y-2 rounded-lg p-2 text-center">
+                      <UploadCloud className="text-muted-foreground h-10 w-10" />
+                      <p className="font-medium">Drag and drop your file</p>
                       <p className="text-muted-foreground text-sm">
-                        or click to browser (MP4 upto 500 MB)
+                        or click to browse (MP4 up to 500MB)
                       </p>
                       <Button
+                        className="cursor-pointer"
                         variant="default"
                         size="sm"
-                        className="cursor-pointer"
                         disabled={uploading}
                       >
                         Select File
@@ -193,15 +193,13 @@ const DashboardClient = ({
                 )}
               </Dropzone>
 
-              <div className="flex flex-col items-center justify-center">
+              <div className="mt-2 flex items-start justify-between">
                 <div>
                   {files.length > 0 && (
-                    <div className="flex space-y-2">
+                    <div className="space-y-1 text-sm">
+                      <p className="font-medium">Selected file:</p>
                       {files.map((file) => (
-                        <p
-                          className="text-muted-foreground text-sm"
-                          key={file.name}
-                        >
+                        <p key={file.name} className="text-muted-foreground">
                           {file.name}
                         </p>
                       ))}
@@ -209,13 +207,12 @@ const DashboardClient = ({
                   )}
                 </div>
                 <Button
-                  className="my-2"
                   disabled={files.length === 0 || uploading}
                   onClick={handleUpload}
                 >
                   {uploading ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Uploading...
                     </>
                   ) : (
@@ -270,14 +267,14 @@ const DashboardClient = ({
                               {item.status === "processing" && (
                                 <Badge variant="outline">Processing</Badge>
                               )}
-                              {item.status === "proccesed" && (
+                              {item.status === "processed" && (
                                 <Badge variant="outline">Processed</Badge>
                               )}
                               {item.status === "no credits" && (
                                 <Badge variant="destructive">No Credits</Badge>
                               )}
                               {item.status === "failed" && (
-                                <Badge variant="destructive">Falied</Badge>
+                                <Badge variant="destructive">Failed</Badge>
                               )}
                             </TableCell>
                             <TableCell>

@@ -15,29 +15,29 @@ export default function HomeNavBarClient({
   const toggleMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
   return (
-    <header className="bg-background sticky top-0 z-50 border-b">
+    <header className="border- sticky top-0 z-50 border-black bg-black">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left - Logo */}
         <Link href="/" className="flex items-center">
           <div className="font-sans text-xl font-medium tracking-tight">
-            <span className="text-foreground">Podcast</span>
+            <span className="text-white">Podcast</span>
             <span className="font-light text-gray-500">/</span>
-            <span className="text-foreground font-light">clipper</span>
+            <span className="font-light text-gray-100">clipper</span>
           </div>
         </Link>
 
         {/* Center - Desktop Nav */}
         <nav className="hidden flex-1 justify-center gap-8 text-base lg:flex">
-          <Link href="#features" className="hover:text-primary">
+          <Link href="#features" className="text-white hover:text-gray-200">
             Features
           </Link>
-          <Link href="#how-it-works" className="hover:text-primary">
+          <Link href="#features" className="text-white hover:text-gray-200">
             How it Works
           </Link>
-          <Link href="#testimonials" className="hover:text-primary">
+          <Link href="#features" className="text-white hover:text-gray-200">
             Testimonials
           </Link>
-          <Link href="#footer" className="hover:text-primary">
+          <Link href="#features" className="text-white hover:text-gray-200">
             Contact
           </Link>
         </nav>
