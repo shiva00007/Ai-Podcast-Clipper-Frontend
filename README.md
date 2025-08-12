@@ -15,7 +15,7 @@ AI Finance Platform is a **full-stack AI-powered finance management system** bui
 ## 🔋 Features  
 👉 **AI Moment Detection** – Detects the most interesting podcast/video segments.
 👉 **Auto Subtitles** – Generates accurate, time-synced captions.
-👉 **Audio Segment Detection**– Filters noise and keeps clean speech clips.
+👉 **Audio Segment Detection** – Filters noise and keeps clean speech clips.
 👉 **Video Processing Pipeline** – End-to-end automation from upload to download.
 👉 **Secure Authentication** – NextAuth.js integration for protected dashboards.
 👉 **Clip Management Dashboard** – Browse, preview, and download clips.
