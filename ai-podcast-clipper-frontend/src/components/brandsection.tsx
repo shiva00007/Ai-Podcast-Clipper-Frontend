@@ -3,7 +3,7 @@ import { Cover } from "./ui/cover";
 
 export default function BrandSection() {
   return (
-    <section id="features" className="m-8">
+    <section id="collaboration" className="m-8">
       <div className="px-4">
         <h2 className="relative z-20 mx-auto max-w-4xl py-2 text-center text-4xl font-semibold text-white md:text-3xl lg:text-5xl">
           Expand your creative reach

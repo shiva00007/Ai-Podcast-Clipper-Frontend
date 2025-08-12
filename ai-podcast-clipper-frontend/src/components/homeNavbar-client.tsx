@@ -31,14 +31,17 @@ export default function HomeNavBarClient({
           <Link href="#features" className="text-white hover:text-gray-200">
             Features
           </Link>
-          <Link href="#features" className="text-white hover:text-gray-200">
-            How it Works
+          <Link
+            href="#collaboration"
+            className="text-white hover:text-gray-200"
+          >
+            Collaboration
           </Link>
-          <Link href="#features" className="text-white hover:text-gray-200">
+          <Link href="#getStart" className="text-white hover:text-gray-200">
+            Get Starts
+          </Link>
+          <Link href="#testimonials" className="text-white hover:text-gray-200">
             Testimonials
-          </Link>
-          <Link href="#features" className="text-white hover:text-gray-200">
-            Contact
           </Link>
         </nav>
 
@@ -74,14 +77,14 @@ export default function HomeNavBarClient({
           <Link href="#features" onClick={toggleMenu} className="block">
             Features
           </Link>
-          <Link href="#how-it-works" onClick={toggleMenu} className="block">
-            How it Works
+          <Link href="#collaboration" onClick={toggleMenu} className="block">
+            Collaboration
+          </Link>
+          <Link href="#getStart" onClick={toggleMenu} className="block">
+            Get Start
           </Link>
           <Link href="#testimonials" onClick={toggleMenu} className="block">
             Testimonials
-          </Link>
-          <Link href="#footer" onClick={toggleMenu} className="block">
-            Contact
           </Link>
           <Link
             href={isLoggedIn ? "/dashboard" : "/login"}

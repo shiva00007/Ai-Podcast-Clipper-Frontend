@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export default function Testimonial() {
   return (
-    <section id="features" className="m-8">
+    <section id="testimonials" className="m-8">
       <div className="px-4">
         <h2 className="relative z-20 mx-auto max-w-4xl py-2 text-center text-4xl font-semibold text-white md:text-3xl lg:text-5xl">
           A partner to your growth

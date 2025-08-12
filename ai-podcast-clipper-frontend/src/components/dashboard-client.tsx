@@ -34,7 +34,7 @@ type uploadedFilesProps = {
   filename: string;
   status: string;
   clipsCount: number;
-  createdAt: Date;
+  createdAt?: Date;
 };
 
 type clipsProps = {
@@ -45,7 +45,7 @@ const DashboardClient = ({
   uploadedFiles,
   clips,
 }: {
-  uploadedFiles: uploadedFilesProps;
+  uploadedFiles: uploadedFilesProps[];
   clips: clipsProps;
 }) => {
   const [files, setFiles] = useState<File[]>([]);
@@ -83,6 +83,8 @@ const DashboardClient = ({
       }
     };
   }, []);
+  //upload handler
+
   const handleUpload = async () => {
     if (files.length === 0) return;
 
@@ -251,7 +253,7 @@ const DashboardClient = ({
                         {uploadedFiles?.map((item) => (
                           <TableRow key={item.id}>
                             <TableCell className="max-w-xs truncate font-medium">
-                              {item.fileName}
+                              {item.filename}
                             </TableCell>
                             <TableCell className="text-muted-foreground text-sm">
                               {
